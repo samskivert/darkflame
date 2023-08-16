@@ -291,7 +291,7 @@ function _update()
   end
 
   outgame_logic()
-  update_camera()
+  -- update_camera()
 
   if (glitch_mushroom or corrupt_mode) then
     for i=1,4 do
@@ -368,56 +368,56 @@ function draw_world(sx,sy,vw,vh,cam_x,cam_y)
   -- sample palette colour
   local colx=120+level
 
-  -- sky gradient
-  if (ldat.sky) then
-    for y=cam_y,127 do
-      col=ldat.sky[flr(mid(1,#ldat.sky, (y+(y%4)*6) / 16))]
-      line(0,y,511,y,col)
-    end
-  end
+  -- -- sky gradient
+  -- if (ldat.sky) then
+  --   for y=cam_y,127 do
+  --     col=ldat.sky[flr(mid(1,#ldat.sky, (y+(y%4)*6) / 16))]
+  --     line(0,y,511,y,col)
+  --   end
+  -- end
 
   -- elements
   for pass=0,1 do
     camera()
 
-    for el in all(ldat.bgels) do
-      if (pass==0 and el.xyz[3]>1) or (pass==1 and el.xyz[3]<=1) then
-        pal()
-        if (el.cols) then
-          for i=1,#el.cols, 2 do
-            if (el.cols[i+1]==-1) then
-              palt(el.cols[i],true)
-            else
-              pal(el.cols[i],el.cols[i+1])
-            end
-          end
-        end
+    -- for el in all(ldat.bgels) do
+    --   if (pass==0 and el.xyz[3]>1) or (pass==1 and el.xyz[3]<=1) then
+    --     pal()
+    --     if (el.cols) then
+    --       for i=1,#el.cols, 2 do
+    --         if (el.cols[i+1]==-1) then
+    --           palt(el.cols[i],true)
+    --         else
+    --           pal(el.cols[i],el.cols[i+1])
+    --         end
+    --       end
+    --     end
 
-        local s=el.src
-        local pixw=s[3] * 8
-        local pixh=s[4] * 8
-        local sx=el.xyz[1]
-        if (el.dx) then
-          sx += el.dx*t()
-        end
+    --     local s=el.src
+    --     local pixw=s[3] * 8
+    --     local pixh=s[4] * 8
+    --     local sx=el.xyz[1]
+    --     if (el.dx) then
+    --       sx += el.dx*t()
+    --     end
 
-        local sy=el.xyz[2]
-        sx = (sx-cam_x)/el.xyz[3]
-        sy = (sy-cam_y)/el.xyz[3]
+    --     local sy=el.xyz[2]
+    --     sx = (sx-cam_x)/el.xyz[3]
+    --     sy = (sy-cam_y)/el.xyz[3]
 
-        repeat
-          map(s[1],s[2],sx,sy,s[3],s[4])
-          if (el.fill_up) then
-            rectfill(sx,-1,sx+pixw-1,sy-1,el.fill_up)
-          end
-          if (el.fill_down) then
-            rectfill(sx,sy+pixh,sx+pixw-1,128,el.fill_down)
-          end
-          sx+=pixw
-        until sx >= 128 or not el.xyz[4]
-      end
-    end
-    pal()
+    --     repeat
+    --       map(s[1],s[2],sx,sy,s[3],s[4])
+    --       if (el.fill_up) then
+    --         rectfill(sx,-1,sx+pixw-1,sy-1,el.fill_up)
+    --       end
+    --       if (el.fill_down) then
+    --         rectfill(sx,sy+pixh,sx+pixw-1,128,el.fill_down)
+    --       end
+    --       sx+=pixw
+    --     until sx >= 128 or not el.xyz[4]
+    --   end
+    -- end
+    -- pal()
 
     if (pass==0) then
       draw_z1(cam_x,cam_y)
@@ -505,7 +505,8 @@ function _draw()
   cls(12)
   -- view width
   local vw=split and 64 or 128
-  cls()
+  cls(1)
+  rectfill(3*8, 3*8, 13*8-1, 13*8-1, 0)
 
   -- decide which side to draw
   -- player 1 view
@@ -515,9 +516,7 @@ function _draw()
   end
 
   -- player 1 (or whole screen)
-  draw_world(
-    view0_x,0,vw,128,
-    cam_x,cam_y)
+  draw_world(view0_x,0,vw,128, cam_x,cam_y)
 
   -- player 2 view if needed
   if (split) then

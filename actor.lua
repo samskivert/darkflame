@@ -70,7 +70,8 @@ function solid (x, y, ignore)
     if (y%1 > 0.5) return solid(x,y+1)
   end
 
-  return fget(val, 1)
+  -- flag 3: solid terrain tile
+  return fget(val, 3)
 end
 
 function smash(x,y,b)
@@ -232,7 +233,6 @@ function make_player(k, x, y, d)
   a.bounce  = 0
   a.delay   = 0
   a.id      = 0 -- player 1
-  print("make_player")
   return a
 end
 

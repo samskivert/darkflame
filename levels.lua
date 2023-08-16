@@ -150,7 +150,7 @@ function init_level(lev)
   -- spawn player
   for y=0,15 do for x=0,127 do
     local val=mget(x,y)
-    if (val == 72) then
+    if (val == 1) then
       clear_cel(x,y)
       pl[1] = make_player(1, x+0.5,y+0.5,1)
       if (num_players==2) then
