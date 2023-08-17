@@ -280,7 +280,7 @@ end
 
 function _update()
   for a in all(actor) do
-    a:move()
+    a:update()
   end
 
   foreach(sparkle, move_sparkle)

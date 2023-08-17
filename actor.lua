@@ -24,7 +24,7 @@ function make_actor(k,x,y,d)
     t=0,
     standing = false,
     draw=draw_actor,
-    move=move_actor,
+    update=update_actor,
   }
 
   -- attributes by flag
@@ -34,7 +34,7 @@ function make_actor(k,x,y,d)
 
   if (fget(k,7)) then
     a.is_monster=true
-    a.move=move_monster
+    a.update=update_monster
   end
 
   if (fget(k,4)) then
@@ -108,7 +108,7 @@ function smash(x,y,b)
   return false -- not solid
 end
 
-function move_actor(a)
+function update_actor(a)
   if (a.life <= 0) then
     del(actor,a)
   end
@@ -228,7 +228,7 @@ end
 function make_player(k, x, y, d)
   local a = make_actor(k, x, y, d)
   a.is_player=true
-  a.move=move_player
+  a.update=update_player
   a.score   = 0
   a.bounce  = 0
   a.delay   = 0
@@ -236,8 +236,8 @@ function make_player(k, x, y, d)
   return a
 end
 
-function move_player(pl)
-  move_actor(pl)
+function update_player(pl)
+  update_actor(pl)
 
   if (pl.y > 18) pl.life=0
 
@@ -286,35 +286,35 @@ function move_player(pl)
   end
 
   -- charge
-  if (btn(5,b) and pl.delay == 0) then
-    pl.dash = 15
-    pl.delay= 20
-    -- charge in dir of buttons
-    dx=0 dy=0
-    if (btn(0,b)) dx-=1*q
-    if (btn(1,b)) dx+=1*q
+  -- if (btn(5,b) and pl.delay == 0) then
+  --   pl.dash = 15
+  --   pl.delay= 20
+  --   -- charge in dir of buttons
+  --   dx=0 dy=0
+  --   if (btn(0,b)) dx-=1*q
+  --   if (btn(1,b)) dx+=1*q
 
-    -- keep controls to 4 btns
-    if (btn(2,b)) dy-=1*q
-    if (btn(3,b)) dy+=1*q
+  --   -- keep controls to 4 btns
+  --   if (btn(2,b)) dy-=1*q
+  --   if (btn(3,b)) dy+=1*q
 
-    if (dx==0 and dy==0) then
-      pl.dx += pl.d * 0.4
-    else
-      local aa=atan2(dx,dy)
-      pl.dx += cos(aa)/2
-      pl.dy += sin(aa)/3
+  --   if (dx==0 and dy==0) then
+  --     pl.dx += pl.d * 0.4
+  --   else
+  --     local aa=atan2(dx,dy)
+  --     pl.dx += cos(aa)/2
+  --     pl.dy += sin(aa)/3
 
-      pl.dy=max(-0.5,pl.dy)
-    end
+  --     pl.dy=max(-0.5,pl.dy)
+  --   end
 
-    -- tiny extra vertical boost
-    if (not pl.standing) then
-      pl.dy = pl.dy - 0.2
-    end
+  --   -- tiny extra vertical boost
+  --   if (not pl.standing) then
+  --     pl.dy = pl.dy - 0.2
+  --   end
 
-    sfx(11)
-  end
+  --   sfx(11)
+  -- end
 
   -- super: give more dash
   if (pl.super > 0) pl.dash=2
@@ -353,8 +353,8 @@ function move_player(pl)
   if (abs(pl.dx) < 0.1) pl.frame = 0
 end
 
-function move_monster(m)
-  move_actor(m)
+function update_monster(m)
+  update_actor(m)
 
   if (m.life<=0) then
     bang_puff(m.x,m.y-0.5,104)
@@ -384,7 +384,7 @@ function init_actor_data()
     [53]={
       ddy=0,
       friction=1,
-      move=move_builder,
+      update=update_builder,
       draw=dummy
     },
 
@@ -402,7 +402,7 @@ function init_actor_data()
       frames=1,
       bounce=0,
       ddy=0, -- gravity
-      move=move_swirly,
+      update=update_swirly,
       draw=draw_swirly,
       can_bump=false,
       d=0.25,
@@ -414,7 +414,7 @@ function init_actor_data()
       ddx=0,
       frames=1,
       active_t=0,
-      move=move_mushroom
+      update=update_mushroom
     },
 
     -- glitch mushroom
@@ -424,7 +424,7 @@ function init_actor_data()
 
     -- bird
     [93]={
-      move=move_bird,
+      update=update_bird,
       draw=draw_bird,
 
       bounce=0,
@@ -433,7 +433,7 @@ function init_actor_data()
 
     -- frog
     [96]={
-      move=move_frog,
+      update=update_frog,
       draw=draw_frog,
       bounce=0,
       friction=1,
