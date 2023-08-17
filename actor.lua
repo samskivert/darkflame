@@ -281,7 +281,7 @@ function move_player(pl)
     pl.dx = pl.dx + accel; pl.d=1
   end
   if ((btn(4,b)) and pl.standing) then
-    pl.dy = -0.7
+    pl.dy = -0.5
     sfx(8)
   end
 
