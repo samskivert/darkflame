@@ -502,8 +502,13 @@ function fade_out()
 end
 
 function _draw()
-  cls(1)
-  rectfill(3*8, 3*8, 13*8-1, 13*8-1, 0)
+  if false then -- debug white background
+    cls(7)
+    rectfill(3*8, 3*8, 13*8-1, 13*8-1, 7)
+  else
+    cls(1)
+    rectfill(3*8, 3*8, 13*8-1, 13*8-1, 0)
+  end
 
   -- decide which side to draw
   -- player 1 view
