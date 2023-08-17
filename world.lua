@@ -502,9 +502,6 @@ function fade_out()
 end
 
 function _draw()
-  cls(12)
-  -- view width
-  local vw=split and 64 or 128
   cls(1)
   rectfill(3*8, 3*8, 13*8-1, 13*8-1, 0)
 
@@ -515,15 +512,7 @@ function _draw()
     view0_x = 64
   end
 
-  -- player 1 (or whole screen)
-  draw_world(view0_x,0,vw,128, cam_x,cam_y)
-
-  -- player 2 view if needed
-  if (split) then
-    cam_x = pl_camx(pl[2].x,64)
-    draw_world(64-view0_x,0,vw,128,
-               cam_x, cam_y)
-  end
+  draw_world(view0_x,0,128,128, cam_x,cam_y)
 
   camera()
   pal()
