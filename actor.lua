@@ -8,6 +8,7 @@ function make_actor(k,x,y,d)
     k=k,
     frame=0,
     frames=4,
+    frame_offsets=nil,
     life = 1,
     hit_t=0,
     x=x,y=y,dx=0,dy=0,
@@ -199,7 +200,12 @@ end
 
 function draw_actor(a)
 
-  local fr=a.k + a.frame
+  local fr=a.k
+  if a.frame_offsets then
+    fr += a.frame_offsets[flr(a.frame+1)]
+  else
+    fr += a.frame
+  end
 
   -- rainbow colour when dashing
   if (a.dash>0) then
@@ -233,6 +239,7 @@ function make_player(k, x, y, d)
   a.bounce  = 0
   a.delay   = 0
   a.id      = 0 -- player 1
+  a.frame_offsets = {0,1,0,2}
   return a
 end
 
