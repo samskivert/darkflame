@@ -507,7 +507,7 @@ function _draw()
     rectfill(3*8, 3*8, 13*8-1, 13*8-1, 7)
   else
     cls(1)
-    rectfill(3*8, 3*8, 13*8-1, 13*8-1, 0)
+    rectfill(2*8, 2*8, 14*8-1, 14*8-1, 0)
   end
 
   -- decide which side to draw

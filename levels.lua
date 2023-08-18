@@ -140,12 +140,19 @@ function init_level(lev)
 
   reload()
 
-  if (level <= 4) then
-    -- copy section of map
-    memcpy(0x2000,
-           0x1000+((lev+1)%4)*0x800,
-           0x800)
+  local lx = 0
+  local ly = 0
+  local ls = 12
+  local lo = (16-ls)/2
+  for y=0,ls-1 do
+    memcpy(0x2000+128*lo+128*ly*ls+128*y+lo, 0x2000+128*y+16+lx*ls, ls)
   end
+  -- if (level <= 4) then
+  --   -- copy section of map
+  --   memcpy(0x2000,
+  --          0x1000+((lev+1)%4)*0x800,
+  --          0x800)
+  -- end
 
   -- spawn player
   for y=0,15 do for x=0,127 do

@@ -188,7 +188,7 @@ function update_actor(a)
   a.dy *= 0.95
 
   -- x friction
-  a.dx *= a.friction
+  a.dx *= 0.9
   if (a.standing) then
     a.dx *= a.friction
   end
@@ -239,6 +239,7 @@ function make_player(k, x, y, d)
   a.bounce  = 0
   a.delay   = 0
   a.id      = 0 -- player 1
+  a.friction = 0.8
   a.frame_offsets = {0,1,0,2}
   return a
 end
