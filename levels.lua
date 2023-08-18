@@ -1,7 +1,8 @@
 -- themes (backgrounds)
 
 level=1
-num_players=1
+room_x=0
+room_y=0
 
 theme_dat={
   [1]={
@@ -112,10 +113,31 @@ theme_dat={
 
 }
 
-function init_level(lev)
+function show_room (rx, ry)
   cls()
-  reset()
+  room_x = rx
+  room_y = ry
 
+  local rsize = 12
+  local loff = (16-rsize)/2
+  for y=0,rsize-1 do
+    memcpy(0x2000+128*loff+128*ry*rsize+128*y+loff, 0x2000+128*y+16+rx*rsize, rsize)
+  end
+end
+
+function room_update ()
+  local p1 = pl[1]
+  if (p1.x > 14) then
+    show_room(room_x+1, room_y)
+    p1.x -= 12
+  elseif p1.x < 2 then
+    show_room(room_x-1, room_y)
+    p1.x += 12
+  end
+  -- TODO: moving up and down? or will we warp to new areas?
+end
+
+function init_level(lev)
   level=lev
   level_t = 0
   death_t = 0
@@ -138,32 +160,17 @@ function init_level(lev)
   pl = {}
   loot = {}
 
+  reset()
   reload()
 
-  local lx = 0
-  local ly = 0
-  local ls = 12
-  local lo = (16-ls)/2
-  for y=0,ls-1 do
-    memcpy(0x2000+128*lo+128*ly*ls+128*y+lo, 0x2000+128*y+16+lx*ls, ls)
-  end
-  -- if (level <= 4) then
-  --   -- copy section of map
-  --   memcpy(0x2000,
-  --          0x1000+((lev+1)%4)*0x800,
-  --          0x800)
-  -- end
+  show_room(room_x, room_y)
 
   -- spawn player
   for y=0,15 do for x=0,127 do
-    local val=mget(x,y)
+    local val=mget(x, y)
     if (val == 1) then
-      clear_cel(x,y)
-      pl[1] = make_player(1, x+0.5,y+0.5,1)
-      if (num_players==2) then
-        pl[2] = make_player(88, x+2,y+1,1)
-        pl[2].id = 1
-      end
+      clear_cel(x, y)
+      pl[1] = make_player(1, x+0.5, y+0.5, 1)
     end
 
     -- count gems

@@ -292,6 +292,7 @@ function _update()
 
   outgame_logic()
   -- update_camera()
+  room_update()
 
   if (glitch_mushroom or corrupt_mode) then
     for i=1,4 do
