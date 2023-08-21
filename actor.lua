@@ -139,67 +139,85 @@ function update_actor(a)
   -- x movement
 
   -- candidate position
-  x1 = a.x + a.dx + sgn(a.dx)/4
+  local x1 = a.x + a.dx + sgn(a.dx)/4
 
-  if not ssolid(x1,a.y-0.5,ign) then
-    -- nothing in the way->move
-    a.x += a.dx
-  else -- hit wall
-    -- bounce
-    if (a.dash > 0) sfx(12)
-    a.dx *= -1
-    a.hit_wall=true
-    -- monsters turn around
-    if (a.is_monster) then
-      a.d *= -1
-      a.dx = 0
-    end
-  end
-
-  -- y movement
-  local fw=0.25
-
-  if (a.dy < 0) then
-    -- going up
-    if (ssolid(a.x-fw, a.y+a.dy-1,ign) or ssolid(a.x+fw, a.y+a.dy-1,ign)) then
-      a.dy=0
-      -- snap to roof
-      a.y=flr(a.y+.5)
-    else
-      a.y += a.dy
-    end
+  -- check hit spike
+  local val = mget(x1, a.y-0.5)
+  if (a.is_player and fget(val, 0)) then
+    a.x = a.restore_x
+    a.y = a.restore_y
+    a.dx = 0
+    a.dy = 0
   else
-    -- going down
-    local y1=a.y+a.dy
-    if ssolidd(a.x-fw,y1) or ssolidd(a.x+fw,y1) then
+    if not ssolid(x1,a.y-0.5,ign) then
+      -- nothing in the way->move
+      a.x += a.dx
+    else -- hit wall
       -- bounce
-      if (a.bounce > 0 and a.dy > 0.2) then
-        a.dy = a.dy * -a.bounce
-      else
-        a.standing=true
-        a.dy=0
+      if (a.dash > 0) sfx(12)
+      a.dx *= -1
+      a.hit_wall=true
+      -- monsters turn around
+      if (a.is_monster) then
+        a.d *= -1
+        a.dx = 0
       end
-      -- snap to top of ground
-      a.y=flr(a.y+0.75)
+    end
+
+    -- y movement
+    local fw=0.25
+
+    if (a.dy < 0) then
+      -- going up
+      if (ssolid(a.x-fw, a.y+a.dy-1,ign) or ssolid(a.x+fw, a.y+a.dy-1,ign)) then
+        a.dy=0
+        -- snap to roof
+        a.y=flr(a.y+.5)
+      else
+        a.y += a.dy
+      end
     else
-      a.y += a.dy
-    end
-    -- pop up
-    while solid(a.x,a.y-0.05) do
-      a.y -= 0.125
-    end
-  end
+      -- going down
+      local y1=a.y+a.dy
+      local lsolid = ssolidd(a.x-fw,y1)
+      local rsolid = ssolidd(a.x+fw,y1)
+      if lsolid then
+        a.restore_x = flr(a.x-fw) + 0.5
+      elseif rsolid then
+        a.restore_x = flr(a.x+fw) + 0.5
+      end
 
-  -- gravity and friction
-  a.dy += a.ddy
-  a.dy *= 0.95
+      if lsolid or rsolid then
+        -- bounce
+        if (a.bounce > 0 and a.dy > 0.2) then
+          a.dy = a.dy * -a.bounce
+        else
+          a.standing=true
+          a.dy=0
+        end
+        -- snap to top of ground
+        a.y=flr(a.y+0.75)
+        a.restore_y = flr(a.y) + 0.5
+      else
+        a.y += a.dy
+      end
+      -- pop up
+      while solid(a.x,a.y-0.05) do
+        a.y -= 0.125
+      end
+    end
 
-  -- x friction
-  a.dx *= 0.9
-  if (a.standing) then
-    a.dx *= a.friction
+    -- gravity and friction
+    a.dy += a.ddy
+    a.dy *= 0.95
+
+    -- x friction
+    a.dx *= 0.9
+    if (a.standing) then
+      a.dx *= a.friction
+    end
+    --end
   end
-  --end
 
   -- counters
   a.t = a.t + 1
