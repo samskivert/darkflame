@@ -4,6 +4,12 @@
 max_actors = 64
 
 function make_actor(k,x,y,d)
+  local arx = room_x
+  local ary = room_y
+  function check_room (rx, ry)
+    return rx == arx and ry == ary
+  end
+
   local a = {
     k=k,
     frame=0,
@@ -24,6 +30,7 @@ function make_actor(k,x,y,d)
     super=0,
     t=0,
     standing = false,
+    check=check_room,
     draw=draw_actor,
     update=update_actor,
   }
@@ -241,6 +248,7 @@ function make_player(k, x, y, d)
   a.id      = 0 -- player 1
   a.friction = 0.8
   a.frame_offsets = {0,1,0,2}
+  a.check = function (rx, ry) return true end
   return a
 end
 

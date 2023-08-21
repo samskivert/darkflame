@@ -81,21 +81,21 @@ function clear_cel(x, y)
   end
 end
 
-function move_spawns(x0, y0)
-  x0=flr(x0)
-  y0=flr(y0)
-  -- spawn actors close to x0,y0
-  for y=0,16 do
-    for x=x0-10,max(16,x0+14) do
-      local val = mget(x,y)
-      -- actor
-      if (fget(val, 5)) then
-        m = make_actor(val,x+0.5,y+1)
-        clear_cel(x,y)
-      end
-    end
-  end
-end
+-- function move_spawns(x0, y0)
+--   x0=flr(x0)
+--   y0=flr(y0)
+--   -- spawn actors close to x0,y0
+--   for y=0,16 do
+--     for x=x0-10,max(16,x0+14) do
+--       local val = mget(x,y)
+--       -- actor
+--       if (fget(val, 5)) then
+--         m = make_actor(val,x+0.5,y+1)
+--         clear_cel(x,y)
+--       end
+--     end
+--   end
+-- end
 
 function alive(a)
   if (not a) return false
@@ -261,8 +261,14 @@ end
 function collisions()
   -- to do: optimize if too many actors
   for i=1,#actor do
-    for j=i+1,#actor do
-      collide(actor[i],actor[j])
+    local ai = actor[i]
+    if ai.check(room_x, room_y) then
+      for j=i+1,#actor do
+        local aj = actor[j]
+        if aj.check(room_x, room_y) then
+          collide(ai,aj)
+        end
+      end
     end
   end
 end
@@ -280,15 +286,17 @@ end
 
 function _update()
   for a in all(actor) do
-    a:update()
+    if a.check(room_x, room_y) then
+      a:update()
+    end
   end
 
   foreach(sparkle, move_sparkle)
   collisions()
 
-  for i=1,#pl do
-    move_spawns(pl[i].x,0)
-  end
+  -- for i=1,#pl do
+  --   move_spawns(pl[i].x,0)
+  -- end
 
   outgame_logic()
   -- update_camera()
@@ -436,13 +444,15 @@ function draw_z1(cam_x,cam_y)
   pal()
   foreach(sparkle, draw_sparkle)
   for a in all(actor) do
-    pal()
-    if (a.hit_t>0 and a.t%4 < 2) then
-      for i=1,15 do
-        pal(i,8+(a.t/4)%4)
+    if a.check(room_x, room_y) then
+      pal()
+      if (a.hit_t>0 and a.t%4 < 2) then
+        for i=1,15 do
+          pal(i,8+(a.t/4)%4)
+        end
       end
+      a:draw() -- same as a.draw(a)
     end
-    a:draw() -- same as a.draw(a)
   end
   -- forground map
   map (0,0,0,0,128,64,1)

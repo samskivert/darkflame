@@ -123,6 +123,21 @@ function show_room (rx, ry)
   for y=0,rsize-1 do
     memcpy(0x2000+128*loff+128*ry*rsize+128*y+loff, 0x2000+128*y+16+rx*rsize, rsize)
   end
+
+  local room_key = ry*100+rx
+  local want_spawn = not spawned[room_key]
+  for y=0,rsize-1 do
+    for x=0,rsize-1 do
+      local val = mget(x,y)
+      if (fget(val, 5)) then
+        if want_spawn then
+          make_actor(val,x+0.5,y+1)
+        end
+        clear_cel(x,y)
+      end
+    end
+  end
+  spawned[room_key] = true
 end
 
 function room_update ()
@@ -155,6 +170,7 @@ function init_level(rx, ry)
   end
 
   actor = {}
+  spawned = {}
   sparkle = {}
   pl = {}
   loot = {}
