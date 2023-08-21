@@ -137,8 +137,7 @@ function room_update ()
   -- TODO: moving up and down? or will we warp to new areas?
 end
 
-function init_level(lev)
-  level=lev
+function init_level(rx, ry)
   level_t = 0
   death_t = 0
   finished_t = 0
@@ -163,6 +162,8 @@ function init_level(lev)
   reset()
   reload()
 
+  room_x = rx
+  room_y = ry
   show_room(room_x, room_y)
 
   -- spawn player
@@ -206,7 +207,4 @@ function init_level(lev)
   end
 
   total_gems += #loot - num_booby
-  if (not pl[1]) then
-    pl[1] = make_player(72,4,4,1)
-  end
 end

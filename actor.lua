@@ -33,7 +33,7 @@ function make_actor(k,x,y,d)
     a.is_pickup=true
   end
 
-  if (fget(k,7)) then
+  if (fget(k,5)) then
     a.is_monster=true
     a.update=update_monster
   end
@@ -388,6 +388,10 @@ function init_actor_data()
   end
 
   actor_dat={
+    [23]={
+      frame_offsets={0,1,0,2}
+    },
+
     -- bridge builder
     [53]={
       ddy=0,

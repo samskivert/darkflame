@@ -109,15 +109,15 @@ function outgame_logic()
     sfx(5)
   end
 
-  if (finished_t > 0) then
-    finished_t += 1
-    if (finished_t > 60) then
-      if (btnp(❎)) then
-        fade_out()
-        init_level(level+1)
-      end
-    end
-  end
+  -- if (finished_t > 0) then
+  --   finished_t += 1
+  --   if (finished_t > 60) then
+  --     if (btnp(❎)) then
+  --       fade_out()
+  --       init_level(level+1)
+  --     end
+  --   end
+  -- end
 
   if (death_t > 0) then
     death_t = death_t + 1
@@ -129,7 +129,7 @@ function outgame_logic()
       sfx(0)
       fade_out()
       -- restart cart end of slice
-      init_level(level)
+      init_level(0, 0)
     end
   end
 end
@@ -270,11 +270,11 @@ end
 -- called at start by pico-8
 function _init()
   init_actor_data()
-  init_level(level)
+  init_level(0, 0)
 
   menuitem(1, "restart level",
            function()
-             init_level(level)
+             init_level(0, 0)
            end)
 end
 
