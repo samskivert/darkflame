@@ -103,10 +103,14 @@ function alive(a)
 end
 
 function outgame_logic()
-  if death_t==0 and not alive(pl[1]) and not alive(pl[2]) then
+  if death_t==0 and not alive(pl[1]) then
     death_t=1
     music(-1)
     sfx(5)
+
+    s=make_sparkle(56,pl[1].x,pl[1].y-.5)
+    s.frames=3
+    s.max_t=15
   end
 
   -- if (finished_t > 0) then
@@ -146,8 +150,11 @@ function monster_hit(m)
 end
 
 function player_hit(p)
+  -- TODO: need period of invincibility after hit
   if (p.dash>0) return
   p.life-=1
+  -- TODO: play a sound
+  printh("player hit " .. p.life)
 end
 
 function collide_event(a1, a2)
@@ -190,7 +197,6 @@ function collide_event(a1, a2)
         finished_t=1
         bang_puff(a2.x,a2.y-0.5,108)
         del(actor,pl[1])
-        del(actor,pl[2])
         music(-1,500)
         sfx(24)
       end
@@ -236,8 +242,8 @@ function collide_event(a1, a2)
         if (btn(🅾️,a1.id)) a1.dy -= .5
         monster_hit(a2)
       else
-        -- player death
-        a1.life=0
+        -- player hit
+        player_hit(a1)
       end
     end
   end
@@ -521,14 +527,7 @@ function _draw()
     rectfill(2*8, 2*8, 14*8-1, 14*8-1, 0)
   end
 
-  -- decide which side to draw
-  -- player 1 view
-  local view0_x = 0
-  if (split and pl[1].x > pl[2].x) then
-    view0_x = 64
-  end
-
-  draw_world(view0_x,0,128,128, cam_x,cam_y)
+  draw_world(0,0,128,128, cam_x,cam_y)
 
   camera()
   pal()
@@ -540,10 +539,8 @@ function _draw()
   color(7)
 
   if (death_t > 45) then
-    print("❎ restart",
-          44,10+1,14)
-    print("❎ restart",
-          44,10,7)
+    print("❎ restart", 44,9+1,14)
+    print("❎ restart", 44,9,7)
   end
 
   if (finished_t > 0) then

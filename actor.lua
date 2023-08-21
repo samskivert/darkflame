@@ -246,6 +246,7 @@ function make_player(k, x, y, d)
   a.bounce  = 0
   a.delay   = 0
   a.id      = 0 -- player 1
+  a.life    = 6
   a.friction = 0.8
   a.frame_offsets = {0,1,0,2}
   a.check = function (rx, ry) return true end
