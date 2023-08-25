@@ -181,12 +181,6 @@ function update_actor(a)
       local y1=a.y+a.dy
       local lsolid = ssolidd(a.x-fw,y1)
       local rsolid = ssolidd(a.x+fw,y1)
-      if lsolid then
-        a.restore_x = flr(a.x-fw) + 0.5
-      elseif rsolid then
-        a.restore_x = flr(a.x+fw) + 0.5
-      end
-
       if lsolid or rsolid then
         -- bounce
         if (a.bounce > 0 and a.dy > 0.2) then
@@ -197,7 +191,6 @@ function update_actor(a)
         end
         -- snap to top of ground
         a.y=flr(a.y+0.75)
-        a.restore_y = flr(a.y) + 0.5
       else
         a.y += a.dy
       end
@@ -210,6 +203,9 @@ function update_actor(a)
     -- gravity and friction
     a.dy += a.ddy
     a.dy *= 0.95
+
+    -- terminal velocity
+    a.dy = min(a.dy, 0.5)
 
     -- x friction
     a.dx *= 0.9
@@ -267,6 +263,8 @@ function make_player(k, x, y, d)
   a.life    = 6
   a.friction = 0.8
   a.frame_offsets = {0,1,0,2}
+  a.restore_x = x
+  a.restore_y = y
   a.check = function (rx, ry) return true end
   return a
 end

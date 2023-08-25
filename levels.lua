@@ -145,9 +145,13 @@ function room_update ()
   if (p1.x > 14) then
     show_room(room_x+1, room_y)
     p1.x -= 12
+    p1.restore_x = flr(p1.x)+0.5
+    p1.restore_y = p1.y
   elseif p1.x < 2 then
     show_room(room_x-1, room_y)
     p1.x += 12
+    p1.restore_x = flr(p1.x)+0.5
+    p1.restore_y = p1.y
   end
   -- TODO: moving up and down? or will we warp to new areas?
 end
