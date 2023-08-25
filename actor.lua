@@ -143,11 +143,16 @@ function update_actor(a)
 
   -- check hit spike
   local val = mget(x1, a.y-0.5)
-  if (a.is_player and fget(val, 0)) then
-    a.x = a.restore_x
-    a.y = a.restore_y
-    a.dx = 0
-    a.dy = 0
+  if (fget(val, 0)) then
+    if (a.is_player) then
+      a.x = a.restore_x
+      a.y = a.restore_y
+      a.dx = 0
+      a.dy = 0
+    else
+      a.life = 0
+      make_death_sparkle(a)
+    end
   else
     if not ssolid(x1,a.y-0.5,ign) then
       -- nothing in the way->move

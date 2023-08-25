@@ -102,15 +102,18 @@ function alive(a)
   return not (a.life <=0 and (a.death_t and time() > a.death_t+0.5))
 end
 
+function make_death_sparkle(a)
+  s=make_sparkle(73,a.x,a.y-.5)
+  s.frames=5
+  s.max_t=15
+end
+
 function outgame_logic()
   if death_t==0 and not alive(pl[1]) then
     death_t=1
     music(-1)
     sfx(5)
-
-    s=make_sparkle(73,pl[1].x,pl[1].y-.5)
-    s.frames=5
-    s.max_t=15
+    make_death_sparkle(pl[1])
   end
 
   -- if (finished_t > 0) then
