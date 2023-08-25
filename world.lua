@@ -108,8 +108,8 @@ function outgame_logic()
     music(-1)
     sfx(5)
 
-    s=make_sparkle(56,pl[1].x,pl[1].y-.5)
-    s.frames=3
+    s=make_sparkle(73,pl[1].x,pl[1].y-.5)
+    s.frames=5
     s.max_t=15
   end
 
